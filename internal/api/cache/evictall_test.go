@@ -12,13 +12,13 @@ import (
 )
 
 func TestEvictAll_Success(t *testing.T) {
-	// Create a new mock database
+	// Create a new mock service
 	mockService := new(MockService)
 
 	// Set expectation
 	mockService.On("EvictAll", context.Background()).Return(nil)
 
-	// Create the handler with the mocked database
+	// Create the handler with the mocked service
 	handler := &Implementation{cacheService: mockService}
 
 	// Create a new HTTP request to test the handler
@@ -41,13 +41,13 @@ func TestEvictAll_Success(t *testing.T) {
 }
 
 func TestEvictAll_UnknownError(t *testing.T) {
-	// Create a new mock database
+	// Create a new mock service
 	mockService := new(MockService)
 
 	// Set expectation
 	mockService.On("EvictAll", mock.Anything).Return(fmt.Errorf("some error"))
 
-	// Create the handler with the mocked database
+	// Create the handler with the mocked service
 	handler := &Implementation{cacheService: mockService}
 
 	// Create a new HTTP request to test the handler
