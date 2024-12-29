@@ -1,5 +1,8 @@
 # Указываем базовый образ с Go
-FROM golang:1.23 AS builder
+FROM golang:1.23-alpine AS builder
+
+# Install necessary build tools
+RUN apk add --no-cache gcc musl-dev
 
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
@@ -14,16 +17,19 @@ COPY . .
 RUN go build -o cacheapp ./cmd/lru/lru.go
 
 # Используем минимальный образ для запуска приложения
-# FROM alpine:edge
+FROM alpine:latest
 
-# # Копируем скомпилированное приложение из предыдущего этапа
-# COPY --from=builder /app/cacheapp /cacheapp
+# Install any runtime dependencies (optional, usually none for static Go binaries)
+RUN apk add --no-cache ca-certificates
 
-# # Копируем файлы конфигурации
-# COPY --from=builder /app/configs ./configs
+# Копируем скомпилированное приложение из предыдущего этапа
+COPY --from=builder /app/cacheapp /cacheapp
 
-# # Копируем файл .env (если используется)
-# COPY --from=builder /app/.env .env
+# Копируем файлы конфигурации
+COPY --from=builder /app/configs ./configs
+
+# Копируем файл .env (если используется)
+COPY --from=builder /app/.env .env
 
 # Указываем порт, который будет использоваться приложением
 EXPOSE 8080
