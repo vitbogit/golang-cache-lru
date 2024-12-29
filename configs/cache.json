@@ -1,0 +1,4 @@
+{
+    "cache_size" : 10,
+    "default_cache_ttl" : "1m"
+}
