@@ -63,6 +63,7 @@ func TestGetAll_OK(t *testing.T) {
 
 	// Assert the response
 	assert.Equal(t, http.StatusOK, rr.Code)
+	// TODO: check for returning values in JSON
 
 	// Assert that the expectations were met
 	mockService.AssertExpectations(t)
